@@ -86,12 +86,12 @@ jobject wrapServer(JNIEnv* env, AbstractServer* server) {
 void AbstractServer::executeRunLoop(JNIEnv* env) {
     try {
         runLoop();
+        reportTermination(env);
     } catch (const exception& ex) {
         rethrowAsJavaException(env, ex);
     }
     unique_lock<mutex> terminationLock(terminationMutex);
     terminated = true;
-    reportTermination(env);
     terminationVariable.notify_all();
 }
 
